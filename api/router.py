@@ -1,7 +1,6 @@
 from aiohttp import web
 from api.views import PictureItemView, PictureCollectionView, UserItemView, UserCollectionView
 
-
 def set_routes(app: web.Application) -> None:
     app.router.add_view('/user', UserCollectionView)
     app.router.add_view('/user/{pk}', UserItemView)

@@ -1,0 +1,2 @@
+Start:
+`docker-compose up`

@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    ports:
+      - "8910:8000"
+    depends_on:
+      postgres:
+         condition: service_healthy
+    networks:
+      - backend
+  postgres:
+    image: "postgres:13-alpine"
+    restart: always
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    expose:
+      - 54321
+    ports:
+      - "54321:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+volumes:
+  postgresql_data:
+
+networks:
+  backend:
+    driver: "bridge"

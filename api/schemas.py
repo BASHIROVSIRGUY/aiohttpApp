@@ -1,5 +1,5 @@
 import re
-
+from uuid import UUID
 from enum import Enum
 from pydantic import BaseModel, EmailStr, validator
 
@@ -23,7 +23,7 @@ class PictureRequest(AbstractModel):
 
 class PictureResponse(PictureRequest):
     out_img: bytes
-    user_id: int
+    user_id: UUID
 
 
 class User(AbstractModel):
@@ -31,7 +31,7 @@ class User(AbstractModel):
     email: EmailStr
 
     @validator('name')
-    def check_name(self, val):
+    def check_name(cls, val):
         if not NAME_REG_PATTERN.match(val):
             raise ValueError('Name must contain only letters, \' \' or \'-\'')
         return val

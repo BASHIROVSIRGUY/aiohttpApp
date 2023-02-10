@@ -4,12 +4,12 @@ env = Env()
 
 DATABASE_URL = env.str(
     "DATABASE_URL",
-    default="postgresql+asyncpg://postgres:postgres@0.0.0.0:54321/postgres"
+    default="postgresql+asyncpg://postgres:postgres@0.0.0.0:5432/postgres"
 )
 
 PORT = env.str(
     "APP_PORT",
-    default=5000
+    default=8000
 )
 
 config = {

@@ -1,6 +1,6 @@
 from aiohttp import web
 
-from yolo.handler import ObjectDetecter
+from yolo.handler import ObjectDetector
 from api.router import set_routes as set_yolo_app_routes
 from api.settings import config
 from api.db.accessor import PostgresAccessor
@@ -16,7 +16,7 @@ def setup_accessors(application):
 
 
 def setup_handlers(application):
-    application['detect_predictor'] = ObjectDetecter()
+    application['detect_predictor'] = ObjectDetector()
 
 
 def set_routes(application):

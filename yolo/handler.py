@@ -1,11 +1,13 @@
-import torch
-from PIL import Image
+import os.path
 from io import BytesIO
 
+import torch
+from PIL import Image
 
-class ObjectDetecter:
-    def __init__(self, yolo_version='m'):
-        self.model = torch.hub.load('ultralytics/yolov5', f'yolov5{yolo_version}')
+
+class ObjectDetector:
+    def __init__(self):
+        self.model = torch.hub.load('ultralytics/yolov5', 'yolov5m', pretrained=True)
 
     def detect(self, img_byte, type='jpeg'):
         img = self._bin_decode(img_byte)

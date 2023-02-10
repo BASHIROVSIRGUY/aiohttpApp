@@ -1,9 +1,10 @@
-aiohttp~=3.8.3
+aiohttp>=3.8.3
 aiohttp-pydantic
-pydantic[email]~=1.10.4
-sqlalchemy~=2.0.1
+pydantic[email]>=1.10.4
+sqlalchemy>=2.0.1
+envparse>=0.2.0
 asyncpg
-envparse~=0.2.0
+markupsafe==2.0.1
 
 # YOLOv5 requirements
 # Usage: pip install -r requirements.txt
@@ -46,7 +47,9 @@ seaborn>=0.11.0
 # openvino-dev  # OpenVINO export
 
 # Deploy ----------------------------------------------------------------------
-# tritonclient[all]~=2.24.0
+setuptools>=65.5.1 # Snyk vulnerability fix
+wheel>=0.38.0 # Snyk vulnerability fix
+tritonclient[all]~=2.24.0
 
 # Extras ----------------------------------------------------------------------
 # mss  # screenshots

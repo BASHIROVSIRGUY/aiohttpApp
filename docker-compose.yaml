@@ -5,29 +5,35 @@ services:
     ports:
       - "8910:8000"
     depends_on:
-      postgres:
+      db:
          condition: service_healthy
     environment:
-      - DATABASE_URL=postgresql+asyncpg://pguser:pgpass@0.0.0.0:54321/appdb
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@0.0.0.0:5445/postgres
       - APP_PORT=8000
     networks:
       - backend
-  postgres:
-    image: "postgres:12"
-    restart: always
+  db:
+    image: "postgres:13.3"
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: appdb
-      POSTGRES_USER: pguser
-      POSTGRES_PASSWORD: pgpass
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    command: -p 5432
+    user: postgres
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 15s
-      timeout: 10s
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres", "-p", "postgres"]
+      interval: 30s
+      timeout: 30s
       retries: 3
-      start_period: 12s
+      start_period: 10s
+    expose:
+      - "5445"
     ports:
-      - "54321:5432"
+      - "5445:5432"
     volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
       - postgresql_data:/var/lib/postgresql/data
     networks:
       - backend

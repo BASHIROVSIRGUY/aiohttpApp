@@ -34,4 +34,4 @@ app = web.Application()
 
 if __name__ == "__main__":
     setup_app(app)
-    web.run_app(app, port=app['config']["app_port"])
+    web.run_app(app, port=int(app['config']["app_port"]))

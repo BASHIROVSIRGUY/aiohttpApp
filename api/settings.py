@@ -9,7 +9,7 @@ DATABASE_URL = env.str(
 
 PORT = env.str(
     "APP_PORT",
-    default=8000
+    default="8000"
 )
 
 config = {

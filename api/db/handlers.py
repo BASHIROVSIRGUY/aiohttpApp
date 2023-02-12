@@ -35,6 +35,10 @@ class AbstractHandler(ABC):
     async def remove(self, *args, **kwargs):
         pass
 
+    @abstractmethod
+    async def _convert_to_schema(self, *args, **kwargs):
+        pass
+
 
 ################################################################
 # ~~~~~~~~~~~~~~~~~~~~~~~~~ Picture ~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -64,12 +68,12 @@ class PictureHandler(AbstractHandler):
     async def read(self, pk: uuid.UUID) -> PictureResponse:
         query = select(PictureTable).where(PictureTable.c.id == pk)
         result = await self.session.execute(query)
-        return result.scalars().one()
+        return self._convert_to_schema(result.scalars().one())
 
     async def read_all(self) -> List[PictureResponse]:
         query = select(PictureTable)
         result = await self.session.execute(query)
-        return result.scalars().all()
+        return [self._convert_to_schema(item) for item in result.scalars().all()]
 
     async def update(self, pk: uuid.UUID, picture: PictureResponse) -> None:
         query = (
@@ -88,6 +92,14 @@ class PictureHandler(AbstractHandler):
         )
         await self.session.execute(query)
         await self.session.commit()
+
+    def _convert_to_schema(self, picture_table_obj: PictureTable) -> PictureResponse:
+        return PictureResponse(
+            in_img=picture_table_obj.in_img,
+            out_img=picture_table_obj.out_img,
+            img_type=picture_table_obj.img_type,
+            user_id=picture_table_obj.user_pk
+        )
 
     async def _get_predict_img(self, img: bytes, type: str) -> bytes:
         loop = asyncio.get_running_loop()
@@ -111,12 +123,12 @@ class UserHandler(AbstractHandler):
     async def read(self, pk: uuid.UUID) -> User:
         query = select(UserTable).where(UserTable.c.id == pk)
         result = await self.session.execute(query)
-        return result.scalars().one()
+        return self._convert_to_schema(result.scalars().one())
 
     async def read_all(self) -> List[User]:
         query = select(UserTable)
         result = await self.session.execute(query)
-        return result.scalars().all()
+        return [self._convert_to_schema(item) for item in result.scalars().all()]
 
     async def update(self, pk: uuid.UUID, user: User):
         query = (
@@ -135,3 +147,9 @@ class UserHandler(AbstractHandler):
         )
         await self.session.execute(query)
         await self.session.commit()
+
+    def _convert_to_schema(self, user_table_obj: UserTable) -> User:
+        return User(
+            name=user_table_obj.name,
+            email=user_table_obj.email
+        )
